@@ -1,0 +1,30 @@
+# Run `ameba --only Lint/UselessAssign` for details
+Lint/UselessAssign:
+  Description: Disallows useless variable assignments
+  ExcludeTypeDeclarations: false
+  Excluded:
+  - spec/xii_spec.cr
+  - spec/xii/*
+  Enabled: true
+  Severity: Warning
+
+# Run `ameba --only Lint/NotNil` for details
+Lint/NotNil:
+  Description: Identifies usage of `not_nil!` calls
+  Excluded:
+  - spec/xii_spec.cr
+  - spec/xii/*
+  Enabled: true
+  Severity: Warning
+
+# Block params inside {% verbatim do %} macro blocks are not real Crystal code
+Naming/BlockParameterName:
+  Excluded:
+  - src/xii/configurable.cr
+
+# Example and spec config classes use plain `getter debug` intentionally —
+# they demonstrate Bool fields, not the Bool predicate naming convention
+Naming/QueryBoolMethods:
+  Excluded:
+  - spec/xii/*
+  - examples/*
