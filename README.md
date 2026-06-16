@@ -199,28 +199,24 @@ raise `Xii::MissingVariableError`.
 
 ### Field annotation options
 
-| Option        | Description                                        | Required |
-|---------------|----------------------------------------------------|----------|
-| `env`         | Environment variable name to read                  | yes      |
-| `separator`   | Delimiter for `Array` fields (default `","`)       | no       |
-| `description` | Human-readable description (supports `${ENV}`, `${TYPE}`, `${DEFAULT}`) | no |
+- `env` *(required)* — environment variable name to read
+- `separator` — delimiter for `Array` fields (default `","`)
+- `description` — human-readable description; supports `${ENV}`, `${TYPE}`, `${DEFAULT}`
 
 The default value is declared directly on the `getter` using Crystal's standard
 ivar default syntax (`= value`).
 
 ### Supported types
 
-| Type                  | ENV conversion                                          |
-|-----------------------|---------------------------------------------------------|
-| `String`              | Used as-is                                              |
-| `String?`             | `nil` when not set                                      |
-| `Bool`                | `"true"`, `"1"`, `"yes"` (case-insensitive) are `true` |
-| `Int8` .. `Int64`     | Parsed with `.to_i8` .. `.to_i64`                       |
-| `UInt8` .. `UInt64`   | Parsed with `.to_u8` .. `.to_u64`                       |
-| `Float32`, `Float64`  | Parsed with `.to_f32`, `.to_f64`                        |
-| `Array(String)`       | Split by separator, stripped, empty entries rejected    |
-| `Array(Int32)`, etc.  | Split then parsed per element type                      |
-| `Array(Float64)`, etc.| Split then parsed per element type                      |
+- `String` — used as-is
+- `String?` — `nil` when not set
+- `Bool` — `"true"`, `"1"`, `"yes"` (case-insensitive) are `true`
+- `Int8` .. `Int64` — parsed with `.to_i8` .. `.to_i64`
+- `UInt8` .. `UInt64` — parsed with `.to_u8` .. `.to_u64`
+- `Float32`, `Float64` — parsed with `.to_f32`, `.to_f64`
+- `Array(String)` — split by separator, stripped, empty entries rejected
+- `Array(Int32)`, etc. — split then parsed per element type
+- `Array(Float64)`, etc. — split then parsed per element type
 
 ### Required vs optional fields
 
