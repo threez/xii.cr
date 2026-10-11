@@ -116,7 +116,7 @@ describe Xii::Configurable do
         config = BasicConfig.load
         config.port.should eq(8080)
         config.name.should eq("myapp")
-        config.debug.should eq(false)
+        config.debug.should be_false
         config.tags.should eq([] of String)
         config.secret.should be_nil
         config.ratio.should eq(1.5)
@@ -139,7 +139,7 @@ describe Xii::Configurable do
         config = BasicConfig.load
         config.port.should eq(9090)
         config.name.should eq("prod-app")
-        config.debug.should eq(true)
+        config.debug.should be_true
         config.tags.should eq(["web", "api", "backend"])
         config.secret.should eq("s3cret")
         config.ratio.should eq(2.75)
@@ -150,8 +150,8 @@ describe Xii::Configurable do
 
   describe "Bool parsing" do
     {% for truthy in ["true", "1", "yes", "TRUE", "Yes"] %}
-      it "parses #{{{truthy}}} as true" do
-        with_env({"TEST_DEBUG" => {{truthy}}}) do
+      it "parses #{{{ truthy }}} as true" do
+        with_env({"TEST_DEBUG" => {{ truthy }}}) do
           config = BasicConfig.load
           config.debug.should eq(true)
         end
@@ -159,8 +159,8 @@ describe Xii::Configurable do
     {% end %}
 
     {% for falsy in ["false", "0", "no", "FALSE", "No", "anything"] %}
-      it "parses #{{{falsy}}} as false" do
-        with_env({"TEST_DEBUG" => {{falsy}}}) do
+      it "parses #{{{ falsy }}} as false" do
+        with_env({"TEST_DEBUG" => {{ falsy }}}) do
           config = BasicConfig.load
           config.debug.should eq(false)
         end
@@ -283,7 +283,7 @@ describe Xii::Configurable do
         config = BasicConfig.load
         config.port.should eq(3000)
         config.name.should eq("test")
-        config.debug.should eq(true)
+        config.debug.should be_true
         config.tags.should eq(["a"])
         config.secret.should eq("x")
       end
@@ -436,7 +436,7 @@ describe Xii::Configurable do
       opt.env.should eq("APP_PORT")
       opt.type.should eq("Int32")
       opt.default.should eq("8080")
-      opt.required.should eq(false)
+      opt.required.should be_false
       opt.description.should eq("Listen port for the HTTP server")
     end
 
@@ -446,7 +446,7 @@ describe Xii::Configurable do
       opt.env.should eq("DATABASE_URL")
       opt.type.should eq("String")
       opt.default.should be_nil
-      opt.required.should eq(true)
+      opt.required.should be_true
       opt.description.should eq("Database connection URL")
     end
 
@@ -455,7 +455,7 @@ describe Xii::Configurable do
       opt.name.should eq("secret")
       opt.type.should eq("String?")
       opt.default.should be_nil
-      opt.required.should eq(false)
+      opt.required.should be_false
     end
 
     it "substitutes ${TYPE} and ${DEFAULT} template variables" do
@@ -506,21 +506,21 @@ describe Xii::Configurable do
   describe "environment helpers" do
     it "production? returns true when APP_ENV is production" do
       with_env({"APP_ENV" => "production"}) do
-        BasicConfig.load.production?.should eq(true)
-        BasicConfig.load.development?.should eq(false)
+        BasicConfig.load.production?.should be_true
+        BasicConfig.load.development?.should be_false
       end
     end
 
     it "development? returns true when APP_ENV is development" do
       with_env({"APP_ENV" => "development"}) do
-        BasicConfig.load.production?.should eq(false)
-        BasicConfig.load.development?.should eq(true)
+        BasicConfig.load.production?.should be_false
+        BasicConfig.load.development?.should be_true
       end
     end
 
     it "development? returns true when APP_ENV is not set" do
       clear_env("APP_ENV") do
-        BasicConfig.load.development?.should eq(true)
+        BasicConfig.load.development?.should be_true
       end
     end
   end
