@@ -92,53 +92,53 @@ module Xii
                 %}
 
                 {% if has_default && !type_str.starts_with?("Array(") %}
-                  _opt_default_{{ivar.id}} = ({{ivar.default_value}}).to_s
+                  _opt_default_{{ ivar.id }} = ({{ ivar.default_value }}).to_s
                 {% else %}
-                  _opt_default_{{ivar.id}} = nil
+                  _opt_default_{{ ivar.id }} = nil
                 {% end %}
 
-                _opt_{{ivar.id}} = ::Xii::Option.new(
-                  name: {{ivar.id.stringify}},
-                  env: {{ann[:env]}},
-                  type: {{type_str}},
-                  default: _opt_default_{{ivar.id}},
-                  required: {{!has_default && !is_nilable}},
+                _opt_{{ ivar.id }} = ::Xii::Option.new(
+                  name: {{ ivar.id.stringify }},
+                  env: {{ ann[:env] }},
+                  type: {{ type_str }},
+                  default: _opt_default_{{ ivar.id }},
+                  required: {{ !has_default && !is_nilable }},
                   description: "",
                 )
-                _raw_{{ivar.id}} = _resolver.resolve!(_opt_{{ivar.id}})
+                _raw_{{ ivar.id }} = _resolver.resolve!(_opt_{{ ivar.id }})
 
                 {% if type_str == "String" %}
-                  @{{ivar.id}} = _raw_{{ivar.id}} || {{has_default ? ivar.default_value : ""}}
+                  @{{ ivar.id }} = _raw_{{ ivar.id }} || {{ has_default ? ivar.default_value : "" }}
 
                 {% elsif is_nilable && ivar.type.resolve.union_types.any? { |t| t == String } %}
-                  @{{ivar.id}} = _raw_{{ivar.id}}
+                  @{{ ivar.id }} = _raw_{{ ivar.id }}
 
                 {% elsif type_str == "Bool" %}
-                  @{{ivar.id}} = if _s = _raw_{{ivar.id}}
+                  @{{ ivar.id }} = if _s = _raw_{{ ivar.id }}
                     ::Xii.parse_bool(_s)
                   else
-                    {{has_default ? ivar.default_value : false}}
+                    {{ has_default ? ivar.default_value : false }}
                   end
 
                 {% elsif type_str.starts_with?("Array(") %}
                   {% array_inner = ivar.type.type_vars.first.resolve %}
-                  @{{ivar.id}} = if _s = _raw_{{ivar.id}}
-                    _parts = ::Xii.split_array(_s, {{separator}})
+                  @{{ ivar.id }} = if _s = _raw_{{ ivar.id }}
+                    _parts = ::Xii.split_array(_s, {{ separator }})
                     {% if array_inner != String %}
-                      _parts.map { |_e| {{array_inner}}.new(_e) }
+                      _parts.map { |_e| {{ array_inner }}.new(_e) }
                     {% else %}
                       _parts
                     {% end %}
                   else
-                    {{has_default ? ivar.default_value : "[] of #{ivar.type.type_vars.first}".id}}
+                    {{ has_default ? ivar.default_value : "[] of #{ivar.type.type_vars.first}".id }}
                   end
 
                 {% elsif is_nilable %}
                   {% inner = ivar.type.resolve.union_types.reject { |t| t == Nil }.first %}
-                  @{{ivar.id}} = _raw_{{ivar.id}}.try { |_s| {{inner}}.new(_s) }
+                  @{{ ivar.id }} = _raw_{{ ivar.id }}.try { |_s| {{ inner }}.new(_s) }
 
                 {% else %}
-                  @{{ivar.id}} = {{ivar.type.resolve}}.new(_raw_{{ivar.id}} || {{ivar.default_value.stringify}})
+                  @{{ ivar.id }} = {{ ivar.type.resolve }}.new(_raw_{{ ivar.id }} || {{ ivar.default_value.stringify }})
                 {% end %}
               {% end %}
             {% end %}
@@ -211,28 +211,28 @@ module Xii
                 %}
 
                 {% if has_default && !type_name.starts_with?("Array(") %}
-                  _default = ({{ivar.default_value}}).to_s
+                  _default = ({{ ivar.default_value }}).to_s
                 {% else %}
                   _default = nil
                 {% end %}
 
-                _default_display = _default || {{is_nilable ? "(nil)" : "(required)"}}
+                _default_display = _default || {{ is_nilable ? "(nil)" : "(required)" }}
 
                 {% if description != "" %}
-                  _desc = {{description}}
-                    .gsub("${ENV}", {{ann[:env]}})
-                    .gsub("${TYPE}", {{type_name}})
+                  _desc = {{ description }}
+                    .gsub("${ENV}", {{ ann[:env] }})
+                    .gsub("${TYPE}", {{ type_name }})
                     .gsub("${DEFAULT}", _default_display)
                 {% else %}
                   _desc = ""
                 {% end %}
 
                 _opts << ::Xii::Option.new(
-                  name: {{ivar.id.stringify}},
-                  env: {{ann[:env]}},
-                  type: {{type_name}},
+                  name: {{ ivar.id.stringify }},
+                  env: {{ ann[:env] }},
+                  type: {{ type_name }},
                   default: _default,
-                  required: {{is_required}},
+                  required: {{ is_required }},
                   description: _desc,
                 )
               {% end %}

@@ -17,7 +17,7 @@ class AppConfig
 end
 
 config_path = File.join(Dir.tempdir, "env_example_config.json")
-File.write(config_path, %(
+File.write(config_path, <<-JSON
   {
     "development": {
       "port": 3000,
@@ -30,7 +30,8 @@ File.write(config_path, %(
       "rate_limit": 100
     }
   }
-))
+  JSON
+)
 
 ENV.delete("APP_PORT")
 ENV.delete("APP_DATABASE_URL")
